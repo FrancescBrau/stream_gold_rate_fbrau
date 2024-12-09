@@ -3,12 +3,19 @@ import 'package:intl/intl.dart';
 
 class GoldScreen extends StatelessWidget {
   const GoldScreen({super.key});
+
+  // GOLD PRICE STREAM
+
+  Stream<double> getGoldPriceStream() async* {
+    await Future.delayed(Duration(seconds: 1));
+    for (int i = 0; i < 5; i++) {
+      await Future.delayed(Duration(seconds: 2));
+      yield 1800 + i * 10;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    /// Platzhalter für den Goldpreis
-    /// soll durch den Stream `getGoldPriceStream()` ersetzt werden
-    const double goldPrice = 69.22;
-
     return SafeArea(
       child: Scaffold(
         body: Padding(
@@ -21,8 +28,9 @@ class GoldScreen extends StatelessWidget {
               Text('Live Kurs:',
                   style: Theme.of(context).textTheme.headlineMedium),
               const SizedBox(height: 20),
-              // TODO: Verwende einen StreamBuilder, um den Goldpreis live anzuzeigen
-              // statt des konstanten Platzhalters
+
+              //Steam Builder
+
               Text(
                 NumberFormat.simpleCurrency(locale: 'de_DE').format(goldPrice),
                 style: Theme.of(context)
