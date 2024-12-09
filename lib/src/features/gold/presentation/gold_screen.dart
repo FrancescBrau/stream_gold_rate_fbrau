@@ -7,9 +7,9 @@ class GoldScreen extends StatelessWidget {
   // GOLD PRICE STREAM
 
   Stream<double> getGoldPriceStream() async* {
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     for (int i = 0; i < 5; i++) {
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       yield 1800 + i * 10;
     }
   }
@@ -31,13 +31,22 @@ class GoldScreen extends StatelessWidget {
 
               //Steam Builder
 
-              Text(
-                NumberFormat.simpleCurrency(locale: 'de_DE').format(goldPrice),
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineLarge!
-                    .copyWith(color: Theme.of(context).colorScheme.primary),
-              ),
+              StreamBuilder<double>(
+                  stream: getGoldPriceStream(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return const Text('Error loading price');
+                    } else if (snapshot.hasData) {
+                      return Text(NumberFormat.simpleCurrency(locale: 'eu_EU')
+                          .format(snapshot.data));
+                    } else {
+                      return Text('Data not found.');
+                    }
+                  }),
             ],
           ),
         ),
