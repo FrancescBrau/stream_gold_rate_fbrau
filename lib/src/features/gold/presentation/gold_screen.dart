@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -6,12 +8,14 @@ class GoldScreen extends StatelessWidget {
 
   // GOLD PRICE STREAM
 
-  Stream<double> getGoldPriceStream() async* {
-    await Future.delayed(const Duration(seconds: 1));
-    for (int i = 0; i < 5; i++) {
-      await Future.delayed(const Duration(seconds: 2));
-      yield 1800 + i * 10;
-    }
+  Stream<double> getGoldPriceStream() {
+    Random random = Random();
+    return Stream<double>.periodic(
+      const Duration(seconds: 1),
+      (int _) {
+        return 60 + random.nextDouble() * 20;
+      },
+    );
   }
 
   @override
@@ -19,7 +23,7 @@ class GoldScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         body: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(32.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -44,7 +48,7 @@ class GoldScreen extends StatelessWidget {
                       return Text(NumberFormat.simpleCurrency(locale: 'eu_EU')
                           .format(snapshot.data));
                     } else {
-                      return Text('Data not found.');
+                      return const Text('Data not found.');
                     }
                   }),
             ],
